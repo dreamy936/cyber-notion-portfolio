@@ -1,15 +1,119 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  /* 定义你的赛博红 */
-  --cyber-red: #ff003c; 
-  --cyber-black: #050505;
+ 
+@layer base {
+  :root {
+    /* 格式必须是：色相 饱和度 亮度 (不要带逗号，不要带 hsl 前缀) */
+    --background: 0 0% 2%; /* #050505 */
+    --foreground: 0 0% 93%; /* #ededed */
+    
+    --card: 0 0% 4%; 
+    --card-foreground: 0 0% 93%;
+ 
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 93%;
+ 
+    /* 主色：血红 #8a0303 */
+    --primary: 0 96% 28%;
+    --primary-foreground: 0 0% 100%;
+ 
+    /* 次色：矩阵绿 #00ff9d */
+    --secondary: 157 100% 50%;
+    --secondary-foreground: 0 0% 0%;
+ 
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 53%;
+ 
+    --accent: 0 0% 10%;
+    --accent-foreground: 0 0% 93%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+ 
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 96% 28%;
+ 
+    --radius: 0.5rem;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
-body {
-  color: white;
-  background: var(--cyber-black);
-  font-family: Arial, Helvetica, sans-serif;
+/* --- V0 特效复刻 --- */
+/* 这里的 hsl() 是必须的，因为上面的变量里没有 */
+.corrupted-card {
+  border: 1px solid hsl(var(--secondary) / 0.3);
+  box-shadow: 0 0 10px hsl(var(--secondary) / 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  clip-path: polygon(
+    0 10px, 10px 0, 
+    100% 0, 100% calc(100% - 10px), 
+    calc(100% - 10px) 100%, 0 100%
+  );
+}
+
+.corrupted-card:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+  transform: translateY(-4px);
+  z-index: 10;
+}
+
+.glow-text-dried-blood {
+  text-shadow: 0 0 10px hsl(var(--primary) / 0.8), 0 0 20px hsl(var(--primary) / 0.4);
+}
+.glow-text-matrix {
+  text-shadow: 0 0 5px hsl(var(--secondary) / 0.6);
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); text-shadow: -2px 0 hsl(var(--secondary)), 2px 0 hsl(var(--primary)); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-2px, -2px); }
+  100% { transform: translate(0); }
+}
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+.neon-border {
+  box-shadow: 0 0 5px hsl(var(--primary)), inset 0 0 5px hsl(var(--primary) / 0.5);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.holographic-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.chromatic-aberration::before, .chromatic-aberration::after {
+  content: ""; position: absolute; inset: 0; background: inherit; opacity: 0.5; mix-blend-mode: overlay; pointer-events: none;
+}
+.chromatic-aberration:hover::before { transform: translate(3px, 0); background-color: red; }
+.chromatic-aberration:hover::after { transform: translate(-3px, 0); background-color: cyan; }
+
+pre {
+  @apply bg-zinc-900 p-4 rounded border border-zinc-800 text-green-400 overflow-x-auto;
+}
+
+/* 自动闪烁动画 */
+.glitch-always {
+  animation: glitch 3s infinite linear alternate-reverse;
+}
+
+/* 红色霓虹边框 */
+.neon-border-red {
+  box-shadow: 0 0 5px #8a0303, inset 0 0 10px rgba(138, 3, 3, 0.3);
 }
